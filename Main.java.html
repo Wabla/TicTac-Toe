@@ -1,0 +1,168 @@
+<html>
+<head>
+<title>Main.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #0000ff;}
+.s3 { color: #008000; font-weight: bold;}
+.s4 { color: #808080; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Main.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span>tictactoe;
+
+<span class="s0">import </span>java.util.*;
+<span class="s0">public class </span>Main {
+
+    <span class="s0">public static final int </span>Empty = <span class="s2">0</span>;
+    <span class="s0">public static final int </span>Cross = <span class="s2">1</span>;
+    <span class="s0">public static final int </span>Nought = <span class="s2">2</span>;
+
+    <span class="s0">public static final int </span>Playing = <span class="s2">0</span>;
+    <span class="s0">public static final int </span>Draw = <span class="s2">1</span>;
+    <span class="s0">public static final int </span>CrossWon = <span class="s2">2</span>;
+    <span class="s0">public static final int </span>NoughtWon = <span class="s2">3</span>;
+
+    <span class="s0">public static final int </span>Rows = <span class="s2">3</span>, Cols = <span class="s2">3</span>;
+    <span class="s0">public static int</span>[][] board = <span class="s0">new int</span>[Rows][Cols];
+
+    <span class="s0">public static int </span>currentState;
+
+    <span class="s0">public static int </span>currentPlayer;
+    <span class="s0">public static int </span>currntRow, currentCol;
+
+    <span class="s0">public static </span>Scanner in = <span class="s0">new </span>Scanner(System.in);
+
+    <span class="s0">public static void </span>main(String[] args) {
+
+        initGame();
+        <span class="s0">do </span>{
+            playerMover(currentPlayer);
+            updateGame(currentPlayer, currntRow, currentCol);
+            printBoard();
+            <span class="s0">if </span>(currentState == CrossWon) {
+                System.out.println(<span class="s3">&quot;X wins!&quot;</span>);
+            } <span class="s0">else if </span>(currentState == NoughtWon) {
+                System.out.println(<span class="s3">&quot;O wins!&quot;</span>);
+            } <span class="s0">else if </span>(currentState == Draw) {
+                System.out.println(<span class="s3">&quot;Draw&quot;</span>);
+            }
+            currentPlayer = (currentPlayer == Cross) ? Nought : Cross;
+        } <span class="s0">while </span>(currentState == Playing);
+    }
+
+
+
+
+<span class="s0">public static void </span>initGame() {
+    <span class="s0">for </span>(<span class="s0">int </span>row = <span class="s2">0</span>; row &lt; Rows; ++row){
+        <span class="s0">for </span>(<span class="s0">int </span>col = <span class="s2">0</span>; col &lt; Cols; ++ col){
+            board[row][col] = Empty;
+        }
+    }
+    currentPlayer = Playing;
+    currentPlayer = Cross;
+
+}
+
+<span class="s0">public static void </span>playerMover(<span class="s0">int </span>theSeed) {
+    <span class="s0">boolean </span>validInput = <span class="s0">false</span>;
+    <span class="s0">do </span>{
+        <span class="s0">if </span>(theSeed == Cross) {
+            System.out.println(<span class="s3">&quot;Enter the Coordinates: &quot;</span>);
+
+        }
+
+        <span class="s0">int </span>row = in.nextInt()-<span class="s2">1</span>;
+        <span class="s0">int </span>col = in.nextInt()-<span class="s2">1</span>;
+        <span class="s0">if </span>(row &gt;= <span class="s2">0 </span>&amp;&amp; row &lt; Rows &amp;&amp; col &gt;= <span class="s2">0 </span>&amp;&amp; col &lt; Cols &amp;&amp; board[row][col] == Empty) {
+            currntRow = row;
+            currentCol = col;
+            board[currntRow][currentCol] = theSeed;
+            validInput =<span class="s0">true</span>;
+        }<span class="s0">else </span>{
+            System.out.println(<span class="s3">&quot;You should enter numbers!&quot;</span>);
+        }
+    }<span class="s0">while </span>(!validInput);
+
+
+
+}
+
+<span class="s0">public static void </span>updateGame(<span class="s0">int </span>theSeed, <span class="s0">int </span>currntRow, <span class="s0">int </span>currentCol) {
+    <span class="s0">if </span>(hasWon(theSeed,currntRow,currentCol)) {
+        currentState = (theSeed == Cross) ? CrossWon : NoughtWon;
+    }<span class="s0">else if </span>(isDraw()) {
+        currentState = Draw;
+    }
+}
+
+<span class="s0">public static boolean </span>isDraw() {
+    <span class="s0">for </span>(<span class="s0">int </span>row = <span class="s2">0</span>; row &lt; Rows; ++row) {
+        <span class="s0">for </span>(<span class="s0">int </span>col = <span class="s2">0</span>; col &lt; Cols; ++col) {
+            <span class="s0">if </span>(board[row][col] == Empty) {
+                <span class="s0">return false</span>;
+            }
+        }
+    }<span class="s0">return true</span>;
+}
+<span class="s0">public static boolean </span>hasWon(<span class="s0">int </span>theSeed, <span class="s0">int </span>currntRow, <span class="s0">int </span>currentCol) {
+    <span class="s0">return </span>(board[currntRow][<span class="s2">0</span>] == theSeed
+            &amp;&amp; board[currntRow][<span class="s2">1</span>]==theSeed
+            &amp;&amp; board[currntRow][<span class="s2">2</span>]== theSeed
+            || board[<span class="s2">0</span>][currentCol] == theSeed
+            &amp;&amp; board[<span class="s2">1</span>][currentCol] == theSeed
+            &amp;&amp; board[<span class="s2">2</span>][currentCol] == theSeed
+            || currntRow == currentCol
+            &amp;&amp; board[<span class="s2">0</span>][<span class="s2">0</span>] == theSeed
+            &amp;&amp; board[<span class="s2">1</span>][<span class="s2">1</span>] == theSeed
+            &amp;&amp; board[<span class="s2">2</span>][<span class="s2">2</span>] == theSeed
+            || currntRow + currentCol == <span class="s2">2</span>
+            &amp;&amp; board[<span class="s2">0</span>][<span class="s2">2</span>] == theSeed
+            &amp;&amp; board[<span class="s2">1</span>][<span class="s2">1</span>] == theSeed
+            &amp;&amp; board[<span class="s2">2</span>][<span class="s2">0</span>] == theSeed);
+}
+
+<span class="s0">public static void </span>printBoard() {
+    System.out.println(<span class="s3">&quot;---------&quot;</span>);
+    <span class="s0">for </span>(<span class="s0">int </span>row = <span class="s2">0</span>; row &lt; Rows; ++row) {
+        System.out.print(<span class="s3">&quot;| &quot;</span>);
+        <span class="s0">for </span>(<span class="s0">int </span>col = <span class="s2">0</span>; col &lt; Cols; ++col) {
+            printCell(board[row][col]);
+            <span class="s0">if </span>(col != Cols -<span class="s2">1</span>) {
+                System.out.print(<span class="s3">&quot; &quot;</span>);
+            }
+        }
+        System.out.println(<span class="s3">&quot; |&quot;</span>);
+        <span class="s4">//System.out.println();</span>
+        <span class="s0">if </span>(row != Rows -<span class="s2">1</span>){
+           <span class="s4">// System.out.println(&quot; &quot;);</span>
+        }
+    }
+    System.out.println(<span class="s3">&quot;---------&quot;</span>);
+}
+<span class="s0">public static void </span>printCell(<span class="s0">int </span>content) {
+    <span class="s0">switch </span>(content){
+    <span class="s0">case </span>Empty:
+        System.out.print(<span class="s3">'_'</span>);
+        <span class="s0">break</span>;
+        <span class="s0">case </span>Nought:
+            System.out.print(<span class="s3">'O'</span>);
+            <span class="s0">break</span>;
+        <span class="s0">case </span>Cross:
+            System.out.print(<span class="s3">'X'</span>);
+}
+}
+}
+
+
+</pre>
+</body>
+</html>
